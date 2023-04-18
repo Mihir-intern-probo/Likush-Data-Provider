@@ -3,6 +3,6 @@ const {dataController} = require('./controllers/dataSavingController.js');
 
 const router = express.Router();
 
-router.route('/checkPaperTradePlacement').post(dataController.saveData);
+router.route('/dataSaving').post(dataController.saveData);
 
 module.exports = router;

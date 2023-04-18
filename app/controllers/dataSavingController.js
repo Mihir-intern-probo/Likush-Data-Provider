@@ -16,7 +16,7 @@ const dataController={
             socket.emit('subscribe_topic_event',SOCKET_CONSTANTS.CRYPTO_TOPIC_ID);
             socket.on(`new_topic_event_${SOCKET_CONSTANTS.CRYPTO_TOPIC_ID}`,async (response)=>{
                 console.log(response);
-                await orderBookService(response.skuDetail.event_id, response.eventDetails.end_date);
+                await orderBookService.getorderBook(response.skuDetail.event_id, response.eventDetails.end_date);
                 await dataServices.dataSaving(response.skuDetail.event_id,response.skuDetail.tracking_metadata.target, response.eventDetails.end_date);
             })
 	    console.log("Started Saving Event Details");

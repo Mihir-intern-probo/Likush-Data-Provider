@@ -2,7 +2,7 @@ const {socket} = require('../utils/socket');
 const {client} = require('../utils/redis');
 
 const orderBookService = {
-    orderBookService: async(EVENT_ID, END_TIME) => {
+    getorderBook: async(EVENT_ID, END_TIME) => {
         socket.emit('subscribe_orderbook', EVENT_ID); 
         socket.on(`event_orderbook_${EVENT_ID}`,async (response)=>{ 
             try{
