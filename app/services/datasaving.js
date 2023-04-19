@@ -8,7 +8,6 @@ const {orderBookService} = require('../services/orderBooksService');
         dataSaving: async (event_id, target_price, end_time) => {
             try {
                 const latestRecord = await btcService.btcLatestRecord()
-                const date = new Date()
                 let bap_yes_price, bap_no_price, bap_yes_quantity, bap_no_quantity;   
                 bap_yes_price=await client.get(`bap_yes_price_${event_id}`)
                 bap_no_price=await client.get(`bap_no_price_${event_id}`)
@@ -25,10 +24,10 @@ const {orderBookService} = require('../services/orderBooksService');
                     price: target_price ,
                     time: latestRecord.event_time,
                     close: latestRecord.c_price,
-                    createdAt: formatDate(date),
-                    updatedAt: formatDate(date)
+                    createdAt: formatDate(),
+                    updatedAt: formatDate()
             })
-            let loop = setTimeout(()=>{realAlgoService(event_id, target_price, end_time)},1000);
+            let loop = setTimeout(()=>{dataServices.dataSaving(event_id, target_price, end_time)},1000);
             let date2 = new Date().toJSON(); 
             if(moment(end_time).unix() <= moment(date2).unix()){
                 clearTimeout(loop);
