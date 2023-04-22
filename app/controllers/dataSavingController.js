@@ -2,13 +2,14 @@ const {dataServices} = require('../services/datasaving')
 const {btcService} = require('../services/btcservices');
 const {socket} = require('../utils/socket')
 const {SOCKET_CONSTANTS} = require('../utils/Constants');
-const {orderBookService} = require('../services/orderBooksService');
+const {btcWorkerService} = require('../services/btcWorkerService');
+const {orderBookWorker} = require('../services/orderBookWorker');
 
 const dataController={
     saveData: async(req,res)=>{
         try{
             // CHECK FOR AUTHENTICATION
-            await btcService.btcQuo();
+            btcWorkerService();
             socket.emit('echo');
             socket.on('echo_successful',(data)=>{
                 console.log(data);
@@ -16,8 +17,8 @@ const dataController={
             socket.emit('subscribe_topic_event',SOCKET_CONSTANTS.CRYPTO_TOPIC_ID);
             socket.on(`new_topic_event_${SOCKET_CONSTANTS.CRYPTO_TOPIC_ID}`,async (response)=>{
                 console.log(response);
-                await orderBookService.getorderBook(response.skuDetail.event_id, response.eventDetails.end_date);
-                await dataServices.dataSaving(response.skuDetail.event_id,response.skuDetail.tracking_metadata.target, response.eventDetails.end_date);
+                orderBookWorker(response.skuDetail.event_id, response.eventDetails.end_date)
+                dataServices.dataSaving(response.skuDetail.event_id,response.skuDetail.tracking_metadata.target, response.eventDetails.end_date);
             })
 	    console.log("Started Saving Event Details");
             res.status(200).json({status: " Working "})

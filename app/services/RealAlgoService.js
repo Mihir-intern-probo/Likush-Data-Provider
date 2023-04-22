@@ -5,10 +5,15 @@ const { workerData, parentPort } = require('worker_threads');
 const {orderBookService} = require('./orderBooksService');
 const {client} = require('../utils/redis')
 const formatDate = require('../utils/date');
+let loop;
 
 const realAlgoService = async(event_id, target_price, end_time) => {
     try {
-        console.log(event_id, target_price, end_time, moment(end_time).unix(), moment(new Date).unix());
+        let date2 = new Date().toJSON();
+        if(moment(end_time).unix() <= moment(date2).unix()){
+            clearTimeout(loop);
+            orderBookService.unsubscribeToOrderBook(event_id)
+        }
         const latestRecord = await btcService.btcLatestRecord()
         let bap_yes_price, bap_no_price, bap_yes_quantity, bap_no_quantity;   
         bap_yes_price=await client.get(`bap_yes_price_${event_id}`)
@@ -30,17 +35,10 @@ const realAlgoService = async(event_id, target_price, end_time) => {
             createdAt: currentTime,
             updatedAt: currentTime
         })
-	    let loop;
-	    console.log(moment(end_time).unix(), moment(new Date).unix());
-        loop = setTimeout(()=>{realAlgoService(event_id, target_price, end_time)},1000);
-        let date2 = new Date().toJSON();
-	    console.log(moment(end_time).unix(), moment(date2).unix());
-        if(moment(end_time).unix() <= moment(date2).unix()){
-            clearTimeout(loop);
-            orderBookService.unsubscribeToOrderBook(event_id)
-        }
-    } catch(err) {
 
+        loop = setTimeout(()=>{realAlgoService(event_id, target_price, end_time)},1000);
+    } catch(err) {
+        console.log(err);
     }
 }
 

@@ -1,8 +1,14 @@
+const {btcService} = require('./btcservices');
+const {likushData} = require('../models/likushData')
+const moment = require('moment');
+const { workerData } = require('worker_threads');
+const {client} = require('../utils/redis')
+const formatDate = require('../utils/date');
 const {socket} = require('../utils/socket');
-const {client} = require('../utils/redis');
+let loop;
 
-const orderBookService = {
-    getorderBook: async(EVENT_ID, END_TIME) => {
+const recordorderBookData = async(EVENT_ID, END_TIME) => {
+    try {
         socket.emit('subscribe_orderbook', EVENT_ID); 
         socket.on(`event_orderbook_${EVENT_ID}`,async (response)=>{ 
             try{
@@ -15,15 +21,14 @@ const orderBookService = {
                 console.log("Error: ", err);
             }
         })
-    },
-    unsubscribeToOrderBook: async(EVENT_ID) => {
-        try{
-            socket.emit("unsubscribe_orderbook",EVENT_ID);
-            console.log("Successfully left the room of orderbook");
-        }catch(err){
-            console.log("error while unsubscribing", err);
-        }
+    } catch(err) {
+        console.log(err);
     }
 }
 
-module.exports = {orderBookService};
+
+const main = async() => {
+    await recordorderBookData(workerData.event_id, workerData.end_time);
+}
+
+main()
