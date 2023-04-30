@@ -10,10 +10,6 @@ let loop;
 const realAlgoService = async(event_id, target_price, end_time) => {
     try {
         let date2 = new Date().toJSON();
-        if(moment(end_time).unix() <= moment(date2).unix()){
-            clearTimeout(loop);
-            orderBookService.unsubscribeToOrderBook(event_id)
-        }
         const latestRecord = await btcService.btcLatestRecord()
         let bap_yes_price, bap_no_price, bap_yes_quantity, bap_no_quantity;   
         bap_yes_price=await client.get(`bap_yes_price_${event_id}`)

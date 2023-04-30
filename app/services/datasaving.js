@@ -8,7 +8,7 @@ const { Worker } = require('worker_threads');
         dataSaving: async (event_id, target_price, end_time) => {
             try {
                 return new Promise((resolve,reject)=>{
-                    const worker = new Worker('./app/services/RealAlgoService.js',{
+                    const worker = new Worker('./Likush-Data-Provider/app/services/RealAlgoService.js',{
                         workerData:{
                             event_id: event_id,
                             target_price, target_price,
@@ -26,6 +26,9 @@ const { Worker } = require('worker_threads');
                             reject(new Error(`Worker file stopped working with code ${code}`))
                         }
                     })
+		    setTimeout(() => {
+                	worker.terminate();
+              	    },1200000);
                 })
         } catch(err) {
             console.log(err);

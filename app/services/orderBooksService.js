@@ -19,7 +19,7 @@ const orderBookService = {
     unsubscribeToOrderBook: async(EVENT_ID) => {
         try{
             socket.emit("unsubscribe_orderbook",EVENT_ID);
-            console.log("Successfully left the room of orderbook");
+            console.log("Successfully left the room of orderbook", EVENT_ID);
         }catch(err){
             console.log("error while unsubscribing", err);
         }
