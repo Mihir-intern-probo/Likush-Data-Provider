@@ -26,9 +26,6 @@ const { Worker } = require('worker_threads');
                             reject(new Error(`Worker file stopped working with code ${code}`))
                         }
                     })
-		    setTimeout(() => {
-                	worker.terminate();
-              	    },1200000);
                 })
         } catch(err) {
             console.log(err);

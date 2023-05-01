@@ -31,7 +31,10 @@ const realAlgoService = async(event_id, target_price, end_time) => {
             createdAt: currentTime,
             updatedAt: currentTime
         })
-
+        const currentDate = new Date().toJSON();
+        if(moment(end_time).unix() <= moment(currentDate).unix()){
+            clearTimeout(loop);
+        }
         loop = setTimeout(()=>{realAlgoService(event_id, target_price, end_time)},1000);
     } catch(err) {
         console.log(err);
