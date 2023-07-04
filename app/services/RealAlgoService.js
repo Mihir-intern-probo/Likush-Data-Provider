@@ -33,7 +33,7 @@ const realAlgoService = async(event_id, target_price, end_time) => {
         })
         const currentDate = new Date().toJSON();
         if(moment(end_time).unix() <= moment(currentDate).unix()){
-            clearTimeout(loop);
+            parentPort.postMessage({ terminate: true });
         }
         loop = setTimeout(()=>{realAlgoService(event_id, target_price, end_time)},1000);
     } catch(err) {

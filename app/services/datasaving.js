@@ -16,7 +16,13 @@ const { Worker } = require('worker_threads');
                         }
                     });
                     worker.on('message' ,(data)=>{
-                        resolve(data);
+                        if (data?.terminate) {
+                            worker.terminate();
+                    		console.log("Worker Thread terminated", event_id);
+                    		resolve();
+                  	} else {
+                    		resolve(data);
+                  	}
                     })
                     worker.on('error',(data)=>{
                         reject(data);
